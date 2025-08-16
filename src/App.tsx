@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState } from "react";
 
 // 定义任务类型
 interface Task {
@@ -8,78 +8,77 @@ interface Task {
 }
 
 function App() {
-  // 任务列表/输入
   const [tasks, setTasks] = useState<Task[]>([]);
   const [input, setInput] = useState("");
 
   // 添加任务
-  const addTasks = () => {
-    if (input.trim() === "") {
-      return;
-    }
-
+  const addTask = () => {
+    if (input.trim() === "") return;
     const newTask: Task = {
       id: Date.now(),
       name: input,
       completed: false,
     };
-
     setTasks([...tasks, newTask]);
     setInput("");
   };
 
-  // 切换待办状态
+  // 切换任务完成状态
   const toggleTask = (id: number) => {
     setTasks(
       tasks.map((task) =>
-        task.id === id ? {
-          ...task,
-          completed: !task.completed,
-        } : task
+        task.id === id ? { ...task, completed: !task.completed } : task
       )
     );
   };
 
   // 删除任务
-  const deleteTask=(id:number)=>{
-    setTasks(tasks.filter(
-      (task)=>task.id!==id
-    ));
+  const deleteTask = (id: number) => {
+    setTasks(tasks.filter((task) => task.id !== id));
   };
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div style={{ padding: "20px" ,maxWidth: "500px", margin: "0 auto"}}>
       <h1>Todo List</h1>
 
+      {/* 输入框 + 按钮 */}
       <input
         type="text"
-        placeholder="添加待办任务..."
         value={input}
         onChange={(e) => setInput(e.target.value)}
+        placeholder="输入任务..."
       />
-      <button onClick={addTasks} style={{ marginLeft: "8px" }}>
+      <button onClick={addTask} style={{ marginLeft: "8px" }}>
         添加
       </button>
 
+      {/* 渲染任务列表 */}
       <ul>
-        {tasks.map((task)=>(
-          <li key={(task.id)} style={{margin:"8px 0"}}>
-            <span 
+        {tasks.map((task) => (
+          <li key={task.id} style={{ margin: "8px 0", display: "flex", alignItems: "center" }}>
+            {/* 复选框 */}
+            <input
+              type="checkbox"
+              checked={task.completed}
+              onChange={() => toggleTask(task.id)}
+              style={{ marginRight: "8px" }}
+            />
+
+            {/* 任务名 */}
+            <span
               style={{
                 textDecoration: task.completed ? "line-through" : "none",
-                marginRight: "10px",
-                cursor: "pointer",
+                flex: 1,
               }}
             >
               {task.name}
             </span>
-            <button onClick={()=>toggleTask(task.id)}>
-              {task.completed ? "完成" : "未完成"}
-            </button>
-            <button 
-                onClick={()=>deleteTask(task.id)} 
-                style={{ marginLeft: "6px", color: "red" }}
-              >
+
+            {/* 删除按钮 */}
+            <button
+              onClick={() => deleteTask(task.id)}
+              style={{ marginLeft: "6px", color: "red" }}
+            >
               删除
             </button>
           </li>
@@ -89,4 +88,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
